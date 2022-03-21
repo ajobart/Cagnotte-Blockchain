@@ -41,7 +41,7 @@ contract TestCagnotte {
         // La personne ajoutant une cagnotte est le propriétaire de celle ci
         cagnottes[cagnotteId].owner = msg.sender;
         // On vérifie si la cagnotte existe déjà 
-        require(keccak256(abi.encodePacked(_name)) != keccak256(abi.encodePacked(cagnottes[cagnotteId].name)), 'Cette cagnotte existe deja');
+        require(keccak256(abi.encodePacked(_name)) != keccak256(abi.encodePacked(cagnottes[cagnotteId].name)), 'This cagnotte already exist');
         // Si la cagnotte n'existe pas alors on l'ajoute
         cagnotteId ++;
         cagnottes[cagnotteId].name = _name;
@@ -124,7 +124,7 @@ contract TestCagnotte {
     }
 
     //Verifier la longueur de l'array Allparticipant
-    function getLenght(uint _cagnotteId) public view returns(uint) {
+    function getNbrParticipants(uint _cagnotteId) public view returns(uint) {
         return cagnottes[_cagnotteId].allParticipants.length;
     }
 
@@ -134,12 +134,12 @@ contract TestCagnotte {
     }
 
     //Fonction pour connaitre le nombre de donnation d'un participant
-   function getNbrDonnation(address _addressParticipant) public view returns(uint) {
+   function getNbrDonnationOfParticipant(address _addressParticipant) public view returns(uint) {
         return participants[_addressParticipant].nbrTotalDonsDuDonnateur;
    }
 
    //Fonction pour connaitre le montant de donnation d'un participant
-   function getBalanceDonnations(address _addressParticipant) public view returns(uint) {
+   function getBalanceDonnationsOfParticipant(address _addressParticipant) public view returns(uint) {
        return participants[_addressParticipant].balanceDonnations;
    }
 
