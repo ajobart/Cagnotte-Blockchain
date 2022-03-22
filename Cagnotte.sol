@@ -18,17 +18,13 @@ contract TestCagnotte {
         uint balance;
         uint nbrDeDons;
         uint nbrParticipants;
-        //Le but de la cagnotte
         uint goal;
-        //Verifier si le but de la cagnotte est atteint ou non
         bool goalAchieved;
         address[] allParticipants;
     }
 
     uint cagnotteId = 0;
     
-    // Chaque cagnotte est représenté par un id
-    // Donc chaque cagnotte est unique et chaque cagnotte a un id unique
     mapping(uint => Cagnotte) cagnottes;
     
 
@@ -38,14 +34,13 @@ contract TestCagnotte {
 
     // Fonction pour créer une cagnotte
     function addCagnotte(string memory _name, uint _goal) public {
-        // La personne ajoutant une cagnotte est le propriétaire de celle ci
-        cagnottes[cagnotteId].owner = msg.sender;
         // On vérifie si la cagnotte existe déjà 
         require(keccak256(abi.encodePacked(_name)) != keccak256(abi.encodePacked(cagnottes[cagnotteId].name)), 'This cagnotte already exist');
         // Si la cagnotte n'existe pas alors on l'ajoute
         cagnotteId ++;
-        cagnottes[cagnotteId].name = _name;
+        // La personne ajoutant une cagnotte est le propriétaire de celle ci
         cagnottes[cagnotteId].owner = msg.sender;
+        cagnottes[cagnotteId].name = _name;
         cagnottes[cagnotteId].balance = 0;
         cagnottes[cagnotteId].nbrParticipants = 0;
         cagnottes[cagnotteId].nbrDeDons = 0;
@@ -64,6 +59,12 @@ contract TestCagnotte {
         return cagnottes[_cagnotteId].owner;
     }
 
+
+    //Fonction pour voir le montant 'goal' d'une cagnotte
+    function getGoal(uint _cagnotteId) public view returns(uint) {
+        return cagnottes[_cagnotteId].goal;
+    }
+
     //Fonction pour voir si le goal d'une cagnotte est atteint
     function getStatutGoal(uint _cagnotteId) public view returns(bool) {
         return cagnottes[_cagnotteId].goalAchieved;
@@ -73,11 +74,6 @@ contract TestCagnotte {
     function setGoal(uint _cagnotteId, uint _newGoal) public {
         require(msg.sender == cagnottes[_cagnotteId].owner, "Your not the owner of this cagnotte");
         cagnottes[_cagnotteId].goal = _newGoal;
-    }
-
-    //Fonction pour voir le montant 'goal' d'une cagnotte
-    function getGoal(uint _cagnotteId) public view returns(uint) {
-        return cagnottes[_cagnotteId].goal;
     }
 
     //Fonction pour voir la balance d'une cagnotte
@@ -92,34 +88,50 @@ contract TestCagnotte {
 
     //Fonction Payable pour qu'un utilisateur fasse un don du montant qu'il souhaite à une cagnotte
     function payCagnotte(uint _cagnotteId) payable public {
+        //On vérifie que la cagnotte existe
+        require(keccak256(abi.encodePacked(cagnottes[_cagnotteId].name)) == keccak256(abi.encodePacked(cagnottes[cagnotteId].name)), 'This cagnotte no exist');
         //Le participants doit faire un don d'une valeur supérieur à 0.
         require(msg.value > 0, 'Le montant est insuffisant');
-        cagnottes[_cagnotteId].balance += msg.value;
-        cagnottes[_cagnotteId].nbrDeDons++;
+        cagnottes[cagnotteId].balance += msg.value;
+        cagnottes[cagnotteId].nbrDeDons++;
         participants[msg.sender].addressParticipant = msg.sender;
         participants[msg.sender].nbrTotalDonsDuDonnateur++;
         participants[msg.sender].balanceDonnations = participants[msg.sender].balanceDonnations + msg.value;
         // On ajoute le donateur aux participants
         //On ne stock pas plusieurs fois l'address d'un participant si il fait plusieurs fois des dons sur une même cagnotte
-        if (cagnottes[_cagnotteId].allParticipants.length == 0) {
-            cagnottes[_cagnotteId].allParticipants.push(msg.sender);
-        } else {
-            for(uint i = 0 ; i < cagnottes[_cagnotteId].allParticipants.length ; i++) {
-                // On parcourt tout le tableau allParticipants
-                // Et pour chaque valeur que l'on va rencontrer on check si elle correspond à l'adress que l'on souhaite ajouter
+        
+        if (cagnottes[_cagnotteId].allParticipants.length > 0) {
+            for(uint i = 0; i < cagnottes[_cagnotteId].allParticipants.length; i++) {
                 if (cagnottes[_cagnotteId].allParticipants[i] != msg.sender) {
-                   cagnottes[_cagnotteId].allParticipants.push(msg.sender);
+                    cagnottes[_cagnotteId].allParticipants.push(msg.sender);
                 } else {
-                    cagnottes[_cagnotteId].allParticipants;
+                   '';
                 }
             }
+        } else {
+            cagnottes[_cagnotteId].allParticipants.push(msg.sender);
         }
+
+        /* TEST
+        for(uint i = 0; i < cagnottes[_cagnotteId].allParticipants.length; i++) {
+            if (cagnottes[_cagnotteId].allParticipants.length == 0) {
+                cagnottes[_cagnotteId].allParticipants.push(msg.sender);
+            }
+            else if (cagnottes[_cagnotteId].allParticipants[i] != msg.sender) {
+                cagnottes[_cagnotteId].allParticipants.push(msg.sender);
+            } 
+            else {
+                '';
+            }
+        }
+        */
+
         //On verifie si le but de la cagnotte est atteint
-        if (cagnottes[_cagnotteId].balance >= cagnottes[_cagnotteId].goal) {
-            cagnottes[_cagnotteId].goalAchieved = true;
+        if (cagnottes[cagnotteId].balance >= cagnottes[cagnotteId].goal) {
+            cagnottes[cagnotteId].goalAchieved = true;
         } 
         else {
-            cagnottes[_cagnotteId].goalAchieved = false;
+            cagnottes[cagnotteId].goalAchieved = false;
         }
     }
 
@@ -148,5 +160,6 @@ contract TestCagnotte {
         require(msg.sender == cagnottes[_cagnotteId].owner);
         (bool success, ) = payable(cagnottes[_cagnotteId].owner).call{value: address(this).balance}("Your not the owner of this cagnotte");
         require(success);
+        cagnottes[_cagnotteId].balance = 0;
     }
 }
