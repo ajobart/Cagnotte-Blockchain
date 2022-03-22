@@ -20,6 +20,7 @@ contract TestCagnotte {
         uint nbrParticipants;
         uint goal;
         bool goalAchieved;
+        bool isClosed;
         address[] allParticipants;
     }
 
@@ -47,6 +48,7 @@ contract TestCagnotte {
         require(_goal > 0, 'The goal can\'t be negative');
         cagnottes[cagnotteId].goal = _goal;
         cagnottes[cagnotteId].goalAchieved = false;
+        cagnottes[cagnotteId].isClosed = false;        
     }
 
     //Fonction pour voir le nom d'une cagnotte
@@ -86,10 +88,17 @@ contract TestCagnotte {
         return cagnottes[_cagnotteId].nbrDeDons;
     }
 
+    //Fonction pour voir si une cagnotte est fermé
+    function isClosed(uint _cagnotteId) public view returns(bool) {
+        return cagnottes[_cagnotteId].isClosed;
+    }
+
     //Fonction Payable pour qu'un utilisateur fasse un don du montant qu'il souhaite à une cagnotte
     function payCagnotte(uint _cagnotteId) payable public {
         //On vérifie que la cagnotte existe
         require(keccak256(abi.encodePacked(cagnottes[_cagnotteId].name)) == keccak256(abi.encodePacked(cagnottes[cagnotteId].name)), 'This cagnotte no exist');
+        //On vérifie que la cagnotte n'est pas terminé
+        require(cagnottes[_cagnotteId].isClosed == false, 'La cagnotte est termine');
         //Le participants doit faire un don d'une valeur supérieur à 0.
         require(msg.value > 0, 'Le montant est insuffisant');
         cagnottes[cagnotteId].balance += msg.value;
@@ -161,5 +170,6 @@ contract TestCagnotte {
         (bool success, ) = payable(cagnottes[_cagnotteId].owner).call{value: address(this).balance}("Your not the owner of this cagnotte");
         require(success);
         cagnottes[_cagnotteId].balance = 0;
+        cagnottes[cagnotteId].isClosed = true;
     }
 }
