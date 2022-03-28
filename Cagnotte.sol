@@ -36,8 +36,7 @@ contract TestCagnotte is ERC721Enumerable, ERC721Burnable, Ownable {
         uint nbrParticipants;
         uint goal;
         bool isClosed;
-        address[] allParticipants;
-        address[] participants;
+        Participant[] _Participants;
     }
     
 
@@ -65,8 +64,8 @@ contract TestCagnotte is ERC721Enumerable, ERC721Burnable, Ownable {
     }
 
     // Fonction pour avoir les details d'une cagnotte
-    function getDetails(uint _cagnotteId) public view returns(string memory, uint, uint, uint, bool, address[] memory) {
-        return (cagnottes[_cagnotteId].name, cagnottes[_cagnotteId].balance, cagnottes[_cagnotteId].nbrParticipants, cagnottes[_cagnotteId].goal, cagnottes[_cagnotteId].isClosed, cagnottes[_cagnotteId].allParticipants);
+    function getDetails(uint _cagnotteId) public view returns(string memory, uint, uint, uint, bool, Participant[] memory) {
+        return (cagnottes[_cagnotteId].name, cagnottes[_cagnotteId].balance, cagnottes[_cagnotteId].nbrParticipants, cagnottes[_cagnotteId].goal, cagnottes[_cagnotteId].isClosed, cagnottes[_cagnotteId]._Participants);
     }
     
     //Fonction Payable pour qu'un utilisateur fasse un don du montant qu'il souhaite à une cagnotte
@@ -81,7 +80,10 @@ contract TestCagnotte is ERC721Enumerable, ERC721Burnable, Ownable {
         cagnottes[_cagnotteId].balance += msg.value;
         // On ajoute le donateur aux participants
         //On ne stock pas plusieurs fois l'address d'un participant si il fait plusieurs fois des dons sur une même cagnotte
-        cagnottes[_cagnotteId].participants.push(msg.sender);
+        //cagnottes[_cagnotteId].participants.push(msg.sender);
+
+        Participant memory thisParticipant = Participant(msg.sender, msg.value);
+        cagnottes[_cagnotteId]._Participants.push(thisParticipant);
     }
 
     //Pour burn un NFT
@@ -129,11 +131,11 @@ contract TestCagnotte is ERC721Enumerable, ERC721Burnable, Ownable {
 
     //Verifier la longueur de l'array Allparticipant
     function getNbrParticipants(uint _cagnotteId) internal view returns(uint) {
-        return cagnottes[_cagnotteId].allParticipants.length;
+        return cagnottes[_cagnotteId]._Participants.length;
     }
 
     //Fonction pour voir les participants d'une cagnotte
-    function getParticipants(uint _cagnotteId) internal view returns(address[] memory) {
-        return cagnottes[_cagnotteId].allParticipants;
+    function getParticipants(uint _cagnotteId) internal view returns(Participant[] memory) {
+        return cagnottes[_cagnotteId]._Participants;
     }
 }
