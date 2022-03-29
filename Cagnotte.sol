@@ -23,8 +23,6 @@ contract TestCagnotte is ERC721Enumerable, ERC721Burnable, Ownable {
         uint amount;
     }
 
-    mapping(address => Participant) participants;
-
     //Pour increment l'id des NFTs(cagnotte)
     using Counters for Counters.Counter;
 
