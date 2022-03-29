@@ -28,10 +28,10 @@ contract TestCagnotte is ERC721Enumerable, ERC721Burnable, Ownable {
     
     mapping(address => Participant) participants;
 
-    //Pour increment l'id des NFTs
+    //Pour increment l'id des NFTs(cagnotte)
     using Counters for Counters.Counter;
 
-    //Id du prochain NFT à minté
+    //Id du prochain NFT à minté(cagnotte)
     Counters.Counter private _nftIdCounter;
 
     struct Cagnotte {
@@ -45,17 +45,13 @@ contract TestCagnotte is ERC721Enumerable, ERC721Burnable, Ownable {
         bool isClosed;
         Participant[] _Participants;
     }
-    
-
-    //uint cagnotteId = 0;
-    
+        
     mapping(uint => Cagnotte) cagnottes;
     
 
     constructor() ERC721("Cagnotte NFT", "Cagnotte") {
         contractOwner = msg.sender;
         _nftIdCounter.increment();
-        //cagnotteId++;
     }
 
     // Fonction pour créer une cagnotte
