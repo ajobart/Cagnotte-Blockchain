@@ -107,7 +107,7 @@ contract TestCagnotte is ERC721Enumerable, ERC721Burnable, Ownable {
 
 
     //Fonction pour changer le goal d'une cagnotte
-    function setGoal(uint _nftId, uint _newGoal) public {
+    function setGoal(uint _nftId, uint _newGoal) public isOwner(_nftId) {
         cagnottes[_nftId].goal = _newGoal;
     }
 
