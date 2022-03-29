@@ -128,7 +128,7 @@ contract TestCagnotte is ERC721Enumerable, ERC721Burnable, Ownable {
         return cagnottes[_nftId].balance;
     }
 
-    //Fonction pour voir si une cagnotte est fermé
+    //Fonction pour voir si une cagnotte est closed
     function isClosed(uint _nftId) internal view returns(bool) {
         return cagnottes[_nftId].isClosed;
     }
