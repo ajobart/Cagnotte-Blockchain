@@ -69,9 +69,15 @@ contract TestCagnotte is ERC721Enumerable, ERC721Burnable, Ownable {
         _nftIdCounter.increment();
     }
 
+    //Pour que seul le propriétaire d'une cagnotte puisse faire certaines actions
+	modifier isOwner(uint _nftId) {
+		require(msg.sender == cagnottes[_nftId].owner, "Not the owner");
+		_; 
+	}
+
     // Fonction pour avoir les details d'une cagnotte
-    function getDetails(uint _nftId) public view returns(string memory, uint, uint, uint, bool, Participant[] memory) {
-        return (cagnottes[_nftId].name, cagnottes[_nftId].balance, cagnottes[_nftId].nbrParticipants, cagnottes[_nftId].goal, cagnottes[_nftId].isClosed, cagnottes[_nftId]._Participants);
+    function getDetails(uint _nftId) public view returns(address, string memory, uint, uint, uint, bool, Participant[] memory) {
+        return (cagnottes[_nftId].owner, cagnottes[_nftId].name, cagnottes[_nftId].balance, cagnottes[_nftId].nbrParticipants, cagnottes[_nftId].goal, cagnottes[_nftId].isClosed, cagnottes[_nftId]._Participants);
     }
     
     //Fonction Payable pour qu'un utilisateur fasse un don du montant qu'il souhaite à une cagnotte
@@ -90,8 +96,7 @@ contract TestCagnotte is ERC721Enumerable, ERC721Burnable, Ownable {
 
 
     //Pour retirer l'argent
-    function withdraw(uint _nftId) public payable {  
-        require(cagnottes[_nftId].owner == msg.sender);  
+    function withdraw(uint _nftId) public payable isOwner(_nftId) {  
         (bool success, ) = payable(cagnottes[_nftId].cagnotteOwner).call{value: address(this).balance}("Your not the owner of this cagnotte");
         require(success);
         cagnottes[_nftId].balance = 0;
