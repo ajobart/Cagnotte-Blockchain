@@ -96,34 +96,4 @@ contract TestCagnotte is ERC721Enumerable, ERC721Burnable, Ownable {
     function setGoal(uint _nftId, uint _newGoal) public isOwner(_nftId) {
         cagnottes[_nftId].goal = _newGoal;
     }
-
-    //Fonction pour voir le nom d'une cagnotte
-    function getName(uint _nftId) internal view returns(string memory) {
-        return cagnottes[_nftId].name;
-    }
-
-    //Fonction pour voir le montant 'goal' d'une cagnotte
-    function getGoal(uint _nftId) internal view returns(uint) {
-        return cagnottes[_nftId].goal;
-    }
-
-    //Fonction pour voir la balance d'une cagnotte
-    function getBalance(uint _nftId) internal view returns(uint) {
-        return cagnottes[_nftId].balance;
-    }
-
-    //Fonction pour voir si une cagnotte est closed
-    function isClosed(uint _nftId) internal view returns(bool) {
-        return cagnottes[_nftId].isClosed;
-    }
-
-    //Verifier la longueur de l'array Allparticipant
-    function getNbrParticipants(uint _nftId) internal view returns(uint) {
-        return cagnottes[_nftId]._Participants.length;
-    }
-
-    //Fonction pour voir les participants d'une cagnotte
-    function getParticipants(uint _nftId) internal view returns(Participant[] memory) {
-        return cagnottes[_nftId]._Participants;
-    }
 }
