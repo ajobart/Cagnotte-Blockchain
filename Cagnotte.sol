@@ -64,8 +64,8 @@ contract TestCagnotte is ERC721Enumerable, ERC721Burnable, Ownable {
     }
 
     // Fonction pour avoir les details d'une cagnotte
-    function getDetails(uint _nftId) public view returns(string memory, uint, uint, uint, bool, Participant[] memory) {
-        return (cagnottes[_nftId].name, cagnottes[_nftId].balance, cagnottes[_nftId].nbrParticipants, cagnottes[_nftId].goal, cagnottes[_nftId].isClosed, cagnottes[_nftId]._Participants);
+    function getDetails(uint _nftId) public view returns(string memory, uint, uint, uint, bool, uint, Participant[] memory) {
+        return (cagnottes[_nftId].name, cagnottes[_nftId].balance, cagnottes[_nftId].nbrParticipants, cagnottes[_nftId].goal, cagnottes[_nftId].isClosed, cagnottes[_nftId]._Participants.length, cagnottes[_nftId]._Participants);
     }
 
     //Fonction Payable pour qu'un utilisateur fasse un don du montant qu'il souhaite à une cagnotte
