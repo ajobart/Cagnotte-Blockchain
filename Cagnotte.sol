@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-
 contract TestCagnotte is ERC721Enumerable, ERC721Burnable, Ownable {
 
     // Résolution d'un conflit
